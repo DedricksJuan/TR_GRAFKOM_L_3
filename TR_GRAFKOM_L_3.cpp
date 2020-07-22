@@ -32,10 +32,90 @@ void myinit()
     is_depth = 1;
     glMatrixMode(GL_MODELVIEW);
     glPointSize(3.0);
+    glLineWidth(4.0);
 
 }
 
+void potongan (void)
+{
+    float a1x=50, a1y=50, a2x=50, a2y=200, a3x=100, a3y=50, a4x=100, a4y=200, b1x=150, b1y=200, b2x=150, b2y=50, b3x=200, b3y=200, b4x=200, b4y=50,
+    Ma1b1, Ma2b2, Ma3b3, Ma4b4, Ca1b1, Ca2b2, Ca3b3, Ca4b4, pa, pb, pc, pd, pe, pf, pg, ph;
+    glClear(GL_COLOR_BUFFER_BIT);
 
+
+    glBegin(GL_LINES);
+
+    glColor3f(0.0f, 0.0f, 1.0f);
+    glVertex2f(a1x, a1y);
+    glVertex2f(b1x, b1y);
+    glEnd();
+
+    glBegin(GL_LINES);
+
+    glColor3f(1.0f, 0.0f, 1.0f);
+    glVertex2f(a2x, a2y);
+    glVertex2f(b2x, b2y);
+    glEnd();
+
+    glBegin(GL_LINES);
+
+    glColor3f(0.0f, 1.0f, 0.0f);
+    glVertex2f(a3x, a3y);
+    glVertex2f(b3x, b3y);
+    glEnd();
+
+    glBegin(GL_LINES);
+
+    glColor3f(1.0f, 0.0f, 0.0f);
+    glVertex2f(a4x, a4y);
+    glVertex2f(b4x, b4y);
+    glEnd();
+
+
+//Rumus perpotongang
+    Ma1b1=(b1y-a1y)/(b1x-a1x);
+    Ma2b2=(b2y-a2y)/(b2x-a2x);
+    Ma3b3=(b3y-a3y)/(b3x-a3x);
+    Ma4b4=(b4y-a4y)/(b4x-a4x);
+    Ca1b1=a1y-(a1x*Ma1b1);
+    Ca2b2=a2y-(a2x*Ma2b2);
+    Ca3b3=a3y-(a3x*Ma3b3);
+    Ca4b4=a4y-(a4x*Ma4b4);
+
+//Titik potong
+    pa=(Ca2b2-Ca1b1)/(Ma1b1-Ma2b2);
+    pb=(Ma1b1*pa)+Ca1b1;
+    pc=(Ca4b4-Ca1b1)/(Ma1b1-Ma4b4);
+    pd=(Ma1b1*pc)+Ca1b1;
+    pe=(Ca3b3-Ca2b2)/(Ma2b2-Ma3b3);
+    pf=(Ma2b2*pe)+Ca2b2;
+    pg=(Ca4b4-Ca3b3)/(Ma3b3-Ma4b4);
+    ph=(Ma3b3*pg)+Ca3b3;
+
+//hasil
+    glBegin(GL_POINTS);
+    glColor3f(0,0,0);
+    glVertex2f(pa,pb);
+    glEnd();
+
+    glBegin(GL_POINTS);
+    glColor3f(0,0,0);
+    glVertex2f(pc,pd);
+    glEnd();
+
+    glBegin(GL_POINTS);
+    glColor3f(0,0,0);
+    glVertex2f(pe,pf);
+    glEnd();
+
+    glBegin(GL_POINTS);
+    glColor3f(0,0,0);
+    glVertex2f(pg,ph);
+    glEnd();
+
+
+    glFlush();
+}
 
 void segitiga()
 {
@@ -744,12 +824,11 @@ void draw()
     qobj = gluNewQuadric();
     gluQuadricDrawStyle(qobj, GLU_FILL);
 
-
-    glPushMatrix();//bola
-    glColor3f(0,0,0);
-    glTranslatef(4, -1.9, 11.1);
-    glScalef(1, 1, 1);
-    glutSolidSphere(1.01,200,200);
+    glPushMatrix();// potongan 1
+    glTranslatef(-4.0, 50.1, 0.0);
+    glScalef(0.03, 0.03, 0.03);
+    glRotatef(90, 90, 0, 0);
+    potongan();
     glPopMatrix();
 
     lingkaran();
@@ -1000,13 +1079,14 @@ void keyboard(unsigned char key,int x,int y)
 
 
 }
-void ukuran (int lebar,int tinggi)
+void ukuran (int width,int height)
 {
-    if (tinggi ==0) tinggi = 1;
-
+    if (height == 0) height = 1;
+    GLfloat aspect = (GLfloat)width / (GLfloat)height;
+    glViewport(0, 0, width, height);
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(50.0, lebar / tinggi, 50.0, 500.0);
+    gluPerspective(50.0, width / height, 50.0, 500.0);
     glTranslatef(0.0,-5.0,-150.0);
     glMatrixMode(GL_MODELVIEW);
 }
@@ -1026,5 +1106,3 @@ int main (int argc, char **argv)
     glutMainLoop();
     return 0;
 }
-
-
