@@ -831,6 +831,13 @@ void draw()
     potongan();
     glPopMatrix();
 
+    glPushMatrix();//bola
+    glColor3f(0.3,0.3,0.3);
+    glTranslatef(4, -1.9, 11.1);
+    glScalef(1, 1, 1);
+    glutSolidSphere(1.01,200,200);
+    glPopMatrix();
+
     lingkaran();
 
     segitiga();
